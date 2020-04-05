@@ -1,18 +1,42 @@
-<!doctype html>
-<title>This land</title>
-<style>
-  body { text-align: center; padding: 150px; }
-  h1 { font-size: 50px; }
-  body { font: 20px Helvetica, sans-serif; color: #333; }
-  article { display: block; text-align: left; width: 650px; margin: 0 auto; }
-  a { color: #dc8100; text-decoration: none; }
-  a:hover { color: #333; text-decoration: none; }
-</style>
-
-<article>
-    <h1>Welcome!</h1>
-    <div>
-        <p>The site is currently under construction...</p>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dr Michael Geaghan</title>
+    <link href="main.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="fa/css/all.css">
+    <script>
+      function navExpand() {
+        var x = document.getElementById("nav_bar");
+        if (x.className === "nav_bar") {
+          x.className += " responsive";
+        } else {
+          x.className = "nav_bar";
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>Dr Michael Geaghan</h1>
+      <nav class="nav_bar" id="nav_bar">
+        <a href="" id="nav_home" class="nav_link">Home</a>
+        <a href="" id="nav_about" class="nav_link">About</a>
+        <a href="" id="nav_projects" class="nav_link">Projects</a>
+        <!-- Nav bar icon -->
+        <a href="javascript:void(0);" class="nav_expand" onclick="navExpand()"><div class="fa fa-bars"></div></a>
+      </nav>
+    </header>
+    <main>
+      <div id="main_content">
+        <h2>Welcome!</h2>
+        <p>This site is currently under construction.</p>
         <p>&mdash; Michael</p>
-    </div>
-</article>
+      </div>
+    </main>
+    <footer>
+      <div class="footer_nav_bar">
+        <a href="https://github.com/mgeaghan" id="nav_github" class="footer_nav_link" target="_blank">GitHub</a>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,128 @@
+:root {
+  --accent-color: #f5b622;
+}
+
+html, body {
+  padding: 0px;
+  margin: 0px;
+  height: 100%;
+}
+
+body {
+  background-color: #454545;
+  font-family: Helvetica, Arial, sans-sans-serif;
+}
+
+header {
+  height: auto;
+  background-color: var(--accent-color);
+  --head-h-padding: 20px;
+  padding: 20px var(--head-h-padding) 0px var(--head-h-padding);
+  margin: 0px;
+}
+
+header h1 {
+  margin: 0px 0px 20px 0px;
+}
+
+.nav_bar {
+  position: relative;
+  background-color: hsla(0, 0%, 0%, 0.1);
+  --nav-h-margin: calc(-1 * var(--head-h-padding));
+  margin: 0px var(--nav-h-margin) 0px var(--nav-h-margin);
+  --nav-v-padding: 8px;
+  padding: var(--nav-v-padding) 0px var(--nav-v-padding) 0px;
+  }
+
+.nav_expand {
+  display: none;
+}
+
+.nav_link {
+  --nav-link-h-padding: 40px;
+  padding: var(--nav-v-padding) var(--nav-link-h-padding) var(--nav-v-padding) var(--nav-link-h-padding);
+  text-decoration: none;
+  font-weight: bold;
+  color: #454545;
+  text-align: center;
+}
+
+.nav_link:hover {
+  background-color: hsla(0, 0%, 0%, 0.1);
+}
+
+.nav_link:visited {
+  color: #454545;
+}
+
+@media screen and (max-width: 600px) {
+  .nav_bar {
+    padding: 0px;
+  }
+  .nav_expand {
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    text-align: center;
+    --nav-expand-h-padding: 10px;
+    padding: var(--nav-v-padding) var(--nav-expand-h-padding) var(--nav-v-padding) var(--nav-expand-h-padding);
+    color: #454545;
+  }
+  .nav_expand:hover {
+    background-color: hsla(0, 0%, 0%, 0.1);
+  }
+  .nav_link {
+    display: block;
+  }
+  .nav_link:not(:first-child) {
+    display: none;
+  }
+  .nav_bar.responsive .nav_link {
+    display: block;
+  }
+}
+
+#nav_home {
+}
+
+#nav_about {
+}
+
+#nav_projects {
+}
+
+main {
+  margin: 0px;
+  padding: 10px;
+  background-color: hsla(0, 0%, 50%, 0.5);
+  color: #fff;
+}
+
+#main_content {
+  min-height: 350px;
+}
+
+footer {
+  min-height: 2vh;
+  background-color: var(--accent-color);
+  padding: 10px 20px 10px 20px;
+}
+
+.footer_nav_link {
+  font-size: 0.8em;
+  padding: 5px;
+  margin: 0px;
+  text-decoration: none;
+  font-weight: bold;
+  color: #454545;
+  text-align: center;
+}
+
+.footer_nav_link:visited {
+  color: #454545;
+}
+
+.footer_nav_link:hover {
+  text-decoration: underline;
+}
