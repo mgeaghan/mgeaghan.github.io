@@ -1,5 +1,5 @@
 :root {
-  --accent-color: #f5b622;
+  --accent-color: #4C5C68;
 }
 
 html, body {
@@ -9,7 +9,7 @@ html, body {
 }
 
 body {
-  background-color: #454545;
+  background-color: #46494C;
   font-family: Helvetica, Arial, sans-sans-serif;
 }
 
@@ -19,6 +19,7 @@ header {
   --head-h-padding: 20px;
   padding: 20px var(--head-h-padding) 0px var(--head-h-padding);
   margin: 0px;
+  color: #DCDCDD;
 }
 
 header h1 {
@@ -43,7 +44,7 @@ header h1 {
   padding: var(--nav-v-padding) var(--nav-link-h-padding) var(--nav-v-padding) var(--nav-link-h-padding);
   text-decoration: none;
   font-weight: bold;
-  color: #454545;
+  color: #DCDCDD;
   text-align: center;
 }
 
@@ -52,7 +53,7 @@ header h1 {
 }
 
 .nav_link:visited {
-  color: #454545;
+  color: #DCDCDD;
 }
 
 @media screen and (max-width: 600px) {
@@ -67,7 +68,7 @@ header h1 {
     text-align: center;
     --nav-expand-h-padding: 10px;
     padding: var(--nav-v-padding) var(--nav-expand-h-padding) var(--nav-v-padding) var(--nav-expand-h-padding);
-    color: #454545;
+    color: #DCDCDD;
   }
   .nav_expand:hover {
     background-color: hsla(0, 0%, 0%, 0.1);
@@ -96,7 +97,7 @@ main {
   margin: 0px;
   padding: 10px;
   background-color: hsla(0, 0%, 50%, 0.5);
-  color: #fff;
+  color: #DCDCDD;
 }
 
 #main_content {
@@ -115,12 +116,12 @@ footer {
   margin: 0px;
   text-decoration: none;
   font-weight: bold;
-  color: #454545;
+  color: #DCDCDD;
   text-align: center;
 }
 
 .footer_nav_link:visited {
-  color: #454545;
+  color: #DCDCDD;
 }
 
 .footer_nav_link:hover {
