@@ -5,16 +5,14 @@ class Boid {
 		this.y = props.hasOwnProperty("y") ? props.y : 0;
 		this.radius = props.hasOwnProperty("radius") ? props.radius : 10;
 		this.colour = props.hasOwnProperty("colour") ? props.colour : "red";
-		this.deltaVMax = props.hasOwnProperty("deltaVMax") ? props.deltaVMax : 5;
 		this.deltaThetaMax = props.hasOwnProperty("deltaThetaMax") ? props.deltaThetaMax : Math.PI / 2;
 		this.neighbourRadius = props.hasOwnProperty("neighbourRadius") ? props.neighbourRadius : 150;
 		this.xmax = props.xmax;
 		this.ymax = props.ymax;
-		this.vmax = props.hasOwnProperty("vmax") ? props.vmax : 10;
 		this.vx = 0;
 		this.vy = 0;
 		this.heading = props.hasOwnProperty("heading") ? Math.min(Math.max(0, props.heading), 2 * Math.PI) : Math.random() * 2 * Math.PI;
-		this.speed = props.hasOwnProperty("speed") ? Math.min(Math.max(0, props.speed), Math.abs(this.vmax)) : 20;
+		this.speed = props.hasOwnProperty("speed") ? Math.abs(props.speed) : 20;
 		this.optimalSep = props.hasOwnProperty("optimalSep") ? props.optimalSep : 100;
 		this.boids = [];
 		this.neighbours = [];
@@ -33,6 +31,19 @@ class Boid {
 		this.x += deltaX;
 		this.y += deltaY;
 		this.centreHeading = this.getCentreHeading();
+	}
+
+	updateXYMax(xmax, ymax) {
+		this.xmax = xmax;
+		this.ymax = ymax;
+	}
+
+	updateSpeed(newSpeed) {
+		this.speed = newSpeed;
+	}
+
+	updateRadius(newRadius) {
+		this.neighbourRadius = newRadius;
 	}
 
 	modulo(a, n) {
