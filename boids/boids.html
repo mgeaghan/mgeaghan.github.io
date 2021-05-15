@@ -14,11 +14,17 @@
 		<div id="controls">
 			<div class="slider-container">
 				<label for="slider-number"># Boids: </label>
-				<input type="range" min="1" max="1000" value="50" step="1" class="slider" id="slider-number">
-				<label for="slider-speed">Speed: </label>
-				<input type="range" min="0" max="30" value="5" step="0.1" class="slider" id="slider-speed">
+				<input type="number" min="1" max="1000" value="250" step="1" class="field" id="field-number">
+				<label for="slider-turn">Max turning speed: </label>
+				<input type="range" min="0" max="6.283" value="0.785" step="0.001" class="slider" id="slider-turn">
 				<label for="slider-radius">Radius: </label>
-				<input type="range" min="1" max="500" value="50" step="1" class="slider" id="slider-radius">
+				<input type="range" min="1" max="500" value="175" step="1" class="slider" id="slider-radius">
+				<label for="slider-speed">Speed: </label>
+				<input type="range" min="0" max="30" value="12" step="0.1" class="slider" id="slider-speed">
+				<label for="slider-sep">Optimal separation: </label>
+				<input type="range" min="1" max="1000" value="50" step="1" class="slider" id="slider-sep">
+				<label for="highlight-one">Highlight Boid #1: </label>
+				<input type="checkbox" id="highlight-one">
 			</div>
 		</div>
 		<script src="js/boid.js"></script>

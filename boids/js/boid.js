@@ -3,9 +3,9 @@ class Boid {
 		this.ctx = context;
 		this.x = props.hasOwnProperty("x") ? props.x : 0;
 		this.y = props.hasOwnProperty("y") ? props.y : 0;
-		this.radius = props.hasOwnProperty("radius") ? props.radius : 10;
+		this.radius = props.hasOwnProperty("radius") ? props.radius : 5;
 		this.colour = props.hasOwnProperty("colour") ? props.colour : "red";
-		this.deltaThetaMax = props.hasOwnProperty("deltaThetaMax") ? props.deltaThetaMax : Math.PI / 2;
+		this.maxTurnSpeed = props.hasOwnProperty("maxTurnSpeed") ? props.maxTurnSpeed : Math.PI / 2;
 		this.neighbourRadius = props.hasOwnProperty("neighbourRadius") ? props.neighbourRadius : 150;
 		this.xmax = props.xmax;
 		this.ymax = props.ymax;
@@ -16,7 +16,6 @@ class Boid {
 		this.optimalSep = props.hasOwnProperty("optimalSep") ? props.optimalSep : 100;
 		this.boids = [];
 		this.neighbours = [];
-		this.centreHeading = this.getCentreHeading();
 	}
 
 	draw() {
@@ -30,20 +29,27 @@ class Boid {
 	updatePosition(deltaX, deltaY) {
 		this.x += deltaX;
 		this.y += deltaY;
-		this.centreHeading = this.getCentreHeading();
 	}
 
 	updateXYMax(xmax, ymax) {
 		this.xmax = xmax;
 		this.ymax = ymax;
 	}
+	
+	updateMaxTurnSpeed(newSpeed) {
+		this.maxTurnSpeed = newSpeed;
+	}
+	
+	updateRadius(newRadius) {
+		this.neighbourRadius = newRadius;
+	}
 
 	updateSpeed(newSpeed) {
 		this.speed = newSpeed;
 	}
 
-	updateRadius(newRadius) {
-		this.neighbourRadius = newRadius;
+	updateSeparation(newSeparation) {
+		this.optimalSep = newSeparation;
 	}
 
 	modulo(a, n) {
@@ -51,9 +57,6 @@ class Boid {
 	}
 
 	updateVelocity(cohesion = true, separation = true, avoidWalls = true, alignment = true) {
-		if (avoidWalls) {
-			this.heading += this.avoidWalls();
-		}
 		if (cohesion) {
 			this.heading += this.seekCentreNeighbours();
 		}
@@ -62,6 +65,9 @@ class Boid {
 		}
 		if (alignment) {
 			this.heading += this.alignWithNeighbours();
+		}
+		if (avoidWalls) {
+			this.heading += this.avoidWalls();
 		}
 		// this.heading = ((this.heading % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI);
 		this.heading = this.modulo(this.heading, 2 * Math.PI);
@@ -111,26 +117,11 @@ class Boid {
 		} else if (deltaHeading > Math.PI) {
 			deltaHeading -= (2 * Math.PI);
 		}
-		return this.deltaThetaMax * scale * deltaHeading / Math.PI;
+		return this.maxTurnSpeed * scale * deltaHeading / Math.PI;
 	}
 
 	getCentreHeading() {
 		return this.getHeading(this.xmax / 2, this.ymax / 2);
-	}
-
-	avoidWalls() {
-		let deltaTheta = 0;
-		if (
-			this.x < this.neighbourRadius ||
-			this.y < this.neighbourRadius ||
-			(this.xmax - this.x) < this.neighbourRadius ||
-			(this.ymax - this.y) < this.neighbourRadius
-		) {
-			let distToEdge = Math.min(this.x, this.y, (this.xmax - this.x), (this.ymax - this.y));
-			let turnStrength = (this.neighbourRadius - distToEdge) / this.neighbourRadius;
-			deltaTheta = this.seek(this.centreHeading, turnStrength);
-		}
-		return deltaTheta;
 	}
 
 	seekCentreNeighbours() {
@@ -141,8 +132,13 @@ class Boid {
 		let distCentreNeighbours = this.getDistance(xCentre, yCentre);
 		let turnStrength = distCentreNeighbours / this.neighbourRadius;
 		let headingCentreNeighbours = this.getHeading(xCentre, yCentre);
-		let deltaTheta = this.seek(headingCentreNeighbours, turnStrength);
-		return deltaTheta;
+		let diffHeading = Math.abs(headingCentreNeighbours - this.heading);
+		if (diffHeading > Math.PI) {
+			diffHeading -= Math.PI;
+		}
+		turnStrength *= (diffHeading / Math.PI);
+		let turnSpeed = this.seek(headingCentreNeighbours, turnStrength);
+		return turnSpeed;
 	}
 
 	avoidNeighbours() {
@@ -153,18 +149,18 @@ class Boid {
 		if (xyNeighbours.length == 0) {
 			return 0;
 		}
-		// let xCentre = xyNeighbours.reduce((acc, xy) => acc + xy[0], 0) / xyNeighbours.length;
-		// let yCentre = xyNeighbours.reduce((acc, xy) => acc + xy[1], 0) / xyNeighbours.length;
-		// let distCentreNeighbours = this.getDistance(xCentre, yCentre);
-		// let turnStrength = -(distCentreNeighbours / this.optimalSep);
-		// distNeighbours = distNeighbours.filter((d, i) => tooCloseNeighbours[i]);
-		// let headingCentreNeighbours = this.getHeading(xCentre, yCentre);
-		// let deltaTheta = this.seek(headingCentreNeighbours, turnStrength);
-		// return deltaTheta;
-		let headingTooCloseNeighbours = xyNeighbours.map(xy => this.getHeading(xy[0], xy[1]));
-		let deltaThetaSep = headingTooCloseNeighbours.map((h, i) => -this.seek(h, (this.optimalSep - distNeighbours[i]) / this.optimalSep));
-		deltaThetaSep = deltaThetaSep.reduce((acc, d) => acc + d, 0) / deltaThetaSep.length;
-		return deltaThetaSep;
+		let xCentre = xyNeighbours.reduce((acc, xy) => acc + xy[0], 0) / xyNeighbours.length;
+		let yCentre = xyNeighbours.reduce((acc, xy) => acc + xy[1], 0) / xyNeighbours.length;
+		let distCentreNeighbours = this.getDistance(xCentre, yCentre);
+		let turnStrength = (this.optimalSep - distCentreNeighbours) / this.optimalSep;
+		let headingCentreNeighbours = this.getHeading(xCentre, yCentre);
+		let diffHeading = Math.abs(headingCentreNeighbours - this.heading);
+		if (diffHeading > Math.PI) {
+			diffHeading -= Math.PI;
+		}
+		turnStrength *= (diffHeading / Math.PI);
+		let turnSpeed = -this.seek(headingCentreNeighbours, turnStrength);
+		return turnSpeed;
 	}
 
 	alignWithNeighbours() {
@@ -174,8 +170,36 @@ class Boid {
 		if (diffHeading > Math.PI) {
 			diffHeading -= Math.PI;
 		}
-		let deltaTheta = this.seek(averageHeading, diffHeading / Math.PI);
-		return deltaTheta;
+		let turnSpeed = this.seek(averageHeading, diffHeading / Math.PI);
+		return turnSpeed;
+	}
+
+	avoidWalls() {
+		let turnSpeed = 0;
+		if (
+			this.x < this.neighbourRadius ||
+			this.y < this.neighbourRadius ||
+			(this.xmax - this.x) < this.neighbourRadius ||
+			(this.ymax - this.y) < this.neighbourRadius
+		) {
+			let distToEdge = Math.min(this.x, this.y, (this.xmax - this.x), (this.ymax - this.y));
+			let turnStrength = (this.neighbourRadius - distToEdge) / this.neighbourRadius;
+			let centreHeading = this.getCentreHeading();
+			turnSpeed = this.seek(centreHeading, turnStrength);
+			if (distToEdge == 0) {
+				let newHeading = this.heading + turnSpeed;
+				let diffCentreHeading = Math.abs(centreHeading - newHeading);
+				if (diffCentreHeading > (Math.PI / 2)) {
+					let correctHeading = diffCentreHeading - (Math.PI / 2);
+					if (turnSpeed >= 0) {
+						turnSpeed += correctHeading;
+					} else {
+						turnSpeed -= correctHeading;
+					}
+				}
+			}
+		}
+		return turnSpeed;
 	}
 
 	// DEBUG FUNCTIONS

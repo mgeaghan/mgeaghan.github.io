@@ -8,13 +8,17 @@ class Boids {
 		this.ctx = this.canvas.getContext("2d");
 		this.boids = [];
 		this.radius = props.hasOwnProperty("radius") ? props.radius : 5;
-		this.num = props.hasOwnProperty("num") ? props.num : 10;
+		this.num = props.hasOwnProperty("num") ? props.num : 250;
 		this.deltaV = props.hasOwnProperty("deltaV") ? props.deltaV : 1;
 		this.deltaTheta = props.hasOwnProperty("deltaTheta") ? props.deltaTheta : (Math.PI / 40);
-		this.frameInterval = props.hasOwnProperty("frameInterval") ? props.frameInterval : 100;
-		this.speed = props.hasOwnProperty("speed") ? props.speed : 10;
+		this.frameInterval = props.hasOwnProperty("frameInterval") ? props.frameInterval : 25;
+		this.maxTurnSpeed = props.hasOwnProperty("maxTurnSpeed") ? props.maxTurnSpeed : Math.PI/4;
 		this.neighbourRadius = props.hasOwnProperty("neighbourRadius") ? props.neighbourRadius : 50;
+		this.speed = props.hasOwnProperty("speed") ? props.speed : 10;
+		this.optimalSep = props.hasOwnProperty("optimalSep") ? props.optimalSep : 100;
 		this.lastUpdate = undefined;
+		this.highlightOne = props.hasOwnProperty("highlightOne") ? props.highlightOne : false;
+		this.colour = props.hasOwnProperty("colour") ? props.colour : "red";
 		this.init();
 	}
 
@@ -24,11 +28,12 @@ class Boids {
 			y: Math.floor(Math.random() * this.canvas.height),
 			radius: this.radius,
 			colour: "red",
+			maxTurnSpeed: this.maxTurnSpeed,
+			neighbourRadius: this.neighbourRadius,
 			xmax: this.canvas.width,
 			ymax: this.canvas.height,
-			optimalSep: 400,
 			speed: this.speed,
-			neighbourRadius: this.neighbourRadius,
+			optimalSep: this.optimalSep,
 		})
 	}
 
@@ -86,15 +91,34 @@ class Boids {
 		}
 	}
 
-	updateSpeed(newSpeed) {
+	updateMaxTurnSpeed(newSpeed) {
 		for (let b in this.boids) {
-			this.boids[b].updateSpeed(newSpeed);
+			this.boids[b].updateMaxTurnSpeed(newSpeed);
 		}
 	}
 
 	updateRadius(newRadius) {
 		for (let b in this.boids) {
 			this.boids[b].updateRadius(newRadius);
+		}
+	}
+
+	updateSpeed(newSpeed) {
+		for (let b in this.boids) {
+			this.boids[b].updateSpeed(newSpeed);
+		}
+	}
+
+	updateSeparation(newSeparation) {
+		for (let b in this.boids) {
+			this.boids[b].updateSeparation(newSeparation);
+		}
+	}
+
+	setHighlightOne(checked) {
+		this.highlightOne = checked;
+		if (!this.highlightOne) {
+			this.boids[0].colour = this.colour;
 		}
 	}
 
@@ -136,9 +160,11 @@ class Boids {
 			}
 			this.lastUpdate = timestamp;
 			// DEBUG
-			this.boids[0].colour = "yellow";
-			this.boids[0].drawHeading(5 * this.speed);
-			this.boids[0].drawNeighbourRadius();
+			if (this.highlightOne) {
+				this.boids[0].colour = "yellow";
+				this.boids[0].drawHeading(5 * this.speed);
+				this.boids[0].drawNeighbourRadius();
+			}
 			// END DEBUG
 		}
 		requestAnimationFrame(timestamp => this.move(timestamp));
@@ -150,18 +176,24 @@ class Boids {
 }
 
 // SETUP CONTROLS
-let slider_number = document.getElementById("slider-number");
-let slider_speed = document.getElementById("slider-speed");
+// let slider_number = document.getElementById("slider-number");
+let field_number = document.getElementById("field-number");
+let slider_turn = document.getElementById("slider-turn");
 let slider_radius = document.getElementById("slider-radius");
+let slider_speed = document.getElementById("slider-speed");
+let slider_sep = document.getElementById("slider-sep");
+let highlight_one = document.getElementById("highlight-one");
 /// END SETUP CONTROLS
 
 // CREATE BOIDS
 let boids = new Boids("boids-canvas", {
-	num: slider_number.value,
+	num: field_number.value,
 	frameInterval: 25,
-	speed: slider_speed.value,
+	maxTurnSpeed: slider_turn.value,
 	neighbourRadius: slider_radius.value,
-	height: window.innerHeight * 0.8,
+	speed: slider_speed.value,
+	optimalSep: slider_sep.value,
+	highlightOne: highlight_one.checked,
 });
 boids.animateRandom();
 // END CREATE BOIDS
@@ -171,15 +203,33 @@ window.addEventListener('resize', () => {
 	boids.updateSize(boids.getWindowWidth(), boids.getWindowHeight() * 0.8);
 });
 
-slider_number.oninput = () => {
-	boids.updateNumber(slider_number.value);
+field_number.oninput = () => {
+	if (field_number.value === "" || field_number.value < 1) {
+		field_number.value = 1;
+	} else if (field_number.value > 1000) {
+		field_number.value = 1000;
+	}
+	field_number.value = Math.floor(field_number.value);
+	boids.updateNumber(field_number.value);
+};
+
+slider_turn.oninput = () => {
+	boids.updateMaxTurnSpeed(slider_turn.value);
+};
+
+slider_radius.oninput = () => {
+	boids.updateRadius(slider_radius.value);
 };
 
 slider_speed.oninput = () => {
 	boids.updateSpeed(slider_speed.value);
 };
 
-slider_radius.oninput = () => {
-	boids.updateRadius(slider_radius.value);
+slider_sep.oninput = () => {
+	boids.updateSeparation(slider_sep.value);
+};
+
+highlight_one.onclick = () => {
+	boids.setHighlightOne(highlight_one.checked);
 };
 // END CONTROLS

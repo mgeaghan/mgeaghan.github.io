@@ -15,3 +15,18 @@ body {
 	background-color: rgb(52, 51, 50);
 	display: block;
 }
+
+label {
+	display: block;
+	margin-left: 20px;
+	margin-top: 20px;
+}
+
+input {
+	display: block;
+	margin-left: 20px;
+}
+
+#controls {
+	margin-bottom: 50px;
+}
