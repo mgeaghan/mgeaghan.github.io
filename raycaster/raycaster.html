@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta charset="utf-8">
+		<title>Raycaster</title>
+		<link rel="stylesheet" type="text/css" href="css/raycaster.css">
+		<link rel="stylesheet" type="text/css" href="css/rc-map.css">
+		<link rel="stylesheet" type="text/css" href="css/player.css">
+		<link rel="stylesheet" type="text/css" href="css/rc-fps.css">
+	</head>
+	<body>
+		<div id="raycaster-wrapper">
+			<canvas id="raycaster-fps-canvas"></canvas>
+			<canvas id="raycaster-map-canvas"></canvas>
+		</div>
+		<div id="controls">
+			<label for="draw-mode">Draw mode:</label>
+			<input type="checkbox" id="draw-mode">
+			<label for="slider-fov">FOV: </label>
+			<input type="range" min="0.2" max="6.283" value="1.57" step="0.001" class="slider" id="slider-fov">
+			<label for="slider-dov">Render distance: </label>
+			<input type="range" min="1" max="200" value="150" step="1" class="slider" id="slider-dov">
+			<label for="slider-nrays"># Rays: </label>
+			<input type="range" min="1" max="200" value="96" step="1" class="slider" id="slider-nrays">
+			<label for="draw-collision">Draw collision box:</label>
+			<input type="checkbox" id="draw-collision">
+			<label for="draw-rays">Draw rays:</label>
+			<input type="checkbox" id="draw-rays">
+			
+		</div>
+		<script src="js/rc-map.js"></script>
+		<script src="js/player.js"></script>
+		<script src="js/rc-fps.js"></script>
+		<script src="js/raycaster.js"></script>
+	</body>
+</html>

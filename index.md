@@ -8,3 +8,6 @@ This was a little project designed to investigate the fast fourier transform, ho
 
 This was a really fun project, implementing boids in JavaScript. Still a work in progress, but it works great so far!
 
+## [Raycaster (20 May 2021)](./raycaster/raycaster.html)
+
+A simple implementation of a raycaster. I really enjoyed putting this together. It's amazing how simple this method is, but produces beatiful results!
